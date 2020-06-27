@@ -74,14 +74,20 @@ app.post('/webhook/twitter', function(req, res) {
   });
 
   /* if message */
-  if (Array.isArray(req.body.direct_message_events) &&
-      req.body.direct_message_events.length>0) {
+  if (Array.isArray(req.body.direct_message_events) && req.body.direct_message_events.length>0) {
     const message = req.body.direct_message_events[0];
     const text = message.message_create.message_data.text;
     const senderId = message.message_create.sender_id;
+    console.log("MESSAGE: ", text);
     if (senderId!==twitterId) {
-      const myResponse = "Hello, How can I help you?";
-      sendMessage(myResponse, senderId);
+      if(text == "Black Bird"){
+        const myResponse = "The common blackbird (Turdus merula) is a species of true thrush. It is also called the Eurasian";
+        sendMessage(myResponse, senderId);
+      } else {
+        const myResponse = "Hello, How can I help you?";
+        sendMessage(myResponse, senderId);
+      }
+      
     }
   }
 /*   } else if (Array.isArray(req.body.tweet_create_events) &&
