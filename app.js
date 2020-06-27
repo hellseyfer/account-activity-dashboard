@@ -161,7 +161,7 @@ app.get('/callbacks/:action', passport.authenticate('twitter', { failureRedirect
   /* */
   function sendMessage(text, recipientId) {
     request.post('https://api.twitter.com/1.1/direct_messages/events/new.json',{
-      oauth: twitterOAuth,
+      oauth: auth.twitter_oauth,
       json:{
         event: {
           type: "message_create",
