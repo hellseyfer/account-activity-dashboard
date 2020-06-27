@@ -77,9 +77,8 @@ app.post('/webhook/twitter', function(req, res) {
     const text = message.message_create.message_data.text;
     const senderId = message.message_create.sender_id;
     if (senderId!==twitterId) {
-      const dialogflowResponse = (await sessionClient.detectIntent(
-          text, senderId, message)).fulfillmentText;
-      sendMessage(dialogflowResponse, senderId);
+      const myResponse = "test response";
+      sendMessage(myResponse, senderId);
     }
   } else if (Array.isArray(req.body.tweet_create_events) &&
       req.body.tweet_create_events.length>0) {
@@ -88,8 +87,8 @@ app.post('/webhook/twitter', function(req, res) {
         const senderId = message.user.id_str;
       if (senderId!==twitterId && message.in_reply_to_user_id_str) {
         const screenName = message.user.screen_name;
-        dialogflowResponse = '@'+screenName+' '+dialogflowResponse;
-        sendStatus(dialogflowResponse, senderId);
+        myResponse = '@'+screenName+' '+dialogflowResponse;
+        sendStatus(myResponse, senderId);
       }
   }
 
