@@ -91,7 +91,7 @@ app.post('/webhook/twitter', function(req, res) {
         sendMessage2(myResponse, senderId);
       }
       else {
-        var myResponse = "Hello, How can I help you?";
+        var myResponse = "What is your favorite bird?";
         sendMessage(myResponse, senderId);
       }
       
