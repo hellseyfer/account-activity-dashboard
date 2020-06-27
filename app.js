@@ -80,7 +80,7 @@ app.post('/webhook/twitter', function(req, res) {
     const text = message.message_create.message_data.text;
     const senderId = message.message_create.sender_id;
     if (senderId!==twitterId) {
-      const myResponse = "test response";
+      const myResponse = "Hello, How can I help you?";
       sendMessage(myResponse, senderId);
     }
   }
@@ -171,6 +171,31 @@ app.get('/callbacks/:action', passport.authenticate('twitter', { failureRedirect
             },
             message_data: {
               text: text,
+              quick_reply: {
+                type: "options",
+                options: [
+                  {
+                    label: "Red Bird",
+                    description: "A description about the red bird.",
+                    metadata: "external_id_1"
+                  },
+                  {
+                    label: "Blue Bird",
+                    description: "A description about the blue bird.",
+                    metadata: "external_id_2"
+                  },
+                  {
+                    label: "Black Bird",
+                    description: "A description about the black bird.",
+                    metadata: "external_id_3"
+                  },
+                  {
+                    label: "White Bird",
+                    description: "A description about the white bird.",
+                    metadata: "external_id_4"
+                  }
+                ]
+              }
             }
           }
         }
