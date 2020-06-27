@@ -61,16 +61,39 @@ app.get('/webhook/twitter', function(request, response) {
 /**
  * Receives Account Acitivity events
  **/
-app.post('/webhook/twitter', function(request, response) {
+app.post('/webhook/twitter', function(req, res) {
 
-  console.log(request.body)
+  console.log(req.body)
   
   socket.io.emit(socket.activity_event, {
     internal_id: uuid(),
-    event: request.body
-  })
+    event: req.body
+  });
 
-  response.send('200 OK')
+  /* if message */
+  if (Array.isArray(req.body.direct_message_events) &&
+      req.body.direct_message_events.length>0) {
+    const message = req.body.direct_message_events[0];
+    const text = message.message_create.message_data.text;
+    const senderId = message.message_create.sender_id;
+    if (senderId!==twitterId) {
+      const dialogflowResponse = (await sessionClient.detectIntent(
+          text, senderId, message)).fulfillmentText;
+      sendMessage(dialogflowResponse, senderId);
+    }
+  } else if (Array.isArray(req.body.tweet_create_events) &&
+      req.body.tweet_create_events.length>0) {
+        const message = req.body.tweet_create_events[0];
+        const text = message.text;
+        const senderId = message.user.id_str;
+      if (senderId!==twitterId && message.in_reply_to_user_id_str) {
+        const screenName = message.user.screen_name;
+        dialogflowResponse = '@'+screenName+' '+dialogflowResponse;
+        sendStatus(dialogflowResponse, senderId);
+      }
+  }
+
+  res.send('200 OK')
 })
 
 
@@ -128,3 +151,30 @@ app.get('/activity', auth.basic, require('./routes/activity'))
 app.get('/callbacks/:action', passport.authenticate('twitter', { failureRedirect: '/' }),
   require('./routes/sub-callbacks'))
 
+
+
+  /*
+  * Send Messages
+  /* */
+  function sendMessage(text, recipientId) {
+    request.post('https://api.twitter.com/1.1/direct_messages/events/new.json',{
+      oauth: twitterOAuth,
+      json:{
+        event: {
+          type: "message_create",
+          message_create: {
+            target: {
+              recipient_id: recipientId
+            },
+            message_data: {
+              text: text,
+            }
+          }
+        }
+      }
+    }, function(err, resp, body) {
+      if (err) {
+        console.eror('Failed to send message: ' + err);
+      }
+    });
+  }
