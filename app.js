@@ -81,10 +81,10 @@ app.post('/webhook/twitter', function(req, res) {
     console.log("MESSAGE: ", text);
     if (senderId!==twitterId) {
       if(text == "Black Bird"){
-        const myResponse = "The common blackbird (Turdus merula) is a species of true thrush. It is also called the Eurasian";
+        var myResponse = "The common blackbird (Turdus merula) is a species of true thrush. It is also called the Eurasian";
         sendMessage(myResponse, senderId);
       } else {
-        const myResponse = "Hello, How can I help you?";
+        var myResponse = "Hello, How can I help you?";
         sendMessage(myResponse, senderId);
       }
       
