@@ -80,7 +80,8 @@ app.post('/webhook/twitter', function(req, res) {
       const myResponse = "test response";
       sendMessage(myResponse, senderId);
     }
-  } else if (Array.isArray(req.body.tweet_create_events) &&
+  }
+/*   } else if (Array.isArray(req.body.tweet_create_events) &&
       req.body.tweet_create_events.length>0) {
         const message = req.body.tweet_create_events[0];
         const text = message.text;
@@ -90,7 +91,7 @@ app.post('/webhook/twitter', function(req, res) {
         myResponse = '@'+screenName+' '+dialogflowResponse;
         sendStatus(myResponse, senderId);
       }
-  }
+  } */
 
   res.send('200 OK')
 })
