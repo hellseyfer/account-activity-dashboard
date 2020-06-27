@@ -25,6 +25,8 @@ app.use(session({
   saveUninitialized: true
 }))
 
+const twitterId = process.env.TWITTER_ACCESS_TOKEN.substring(0, process.env.TWITTER_ACCESS_TOKEN.indexOf("-"));
+
 // start server
 const server = app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'))
