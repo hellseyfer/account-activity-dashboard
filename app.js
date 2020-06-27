@@ -82,8 +82,15 @@ app.post('/webhook/twitter', function(req, res) {
     if (senderId!==twitterId) {
       if(text == "Black Bird"){
         var myResponse = "The common blackbird (Turdus merula) is a species of true thrush. It is also called the Eurasian";
-        sendMessage(myResponse, senderId);
-      } else {
+        sendMessage2(myResponse, senderId);
+      } else if (text == "Red Bird") {
+        var myResponse = "The northern cardinal (Cardinalis cardinalis) is one of the most familiar red songbirds in North America, so familiar that it has been honored as the state bird";
+        sendMessage2(myResponse, senderId);
+      } else if (text == "Blue Bird") {
+        var myResponse = "The bluebirds are a group of medium-sized, mostly insectivorous or omnivorous birds in the order of Passerines in the genus Sialia of the thrush family ";
+        sendMessage2(myResponse, senderId);
+      }
+      else {
         var myResponse = "Hello, How can I help you?";
         sendMessage(myResponse, senderId);
       }
@@ -101,8 +108,7 @@ app.post('/webhook/twitter', function(req, res) {
         sendStatus(myResponse, senderId);
       }
   } */
-
-  res.send('200 OK')
+  res.send('200 OK');
 })
 
 
@@ -194,14 +200,32 @@ app.get('/callbacks/:action', passport.authenticate('twitter', { failureRedirect
                     label: "Black Bird",
                     description: "A description about the black bird.",
                     metadata: "external_id_3"
-                  },
-                  {
-                    label: "White Bird",
-                    description: "A description about the white bird.",
-                    metadata: "external_id_4"
                   }
                 ]
               }
+            }
+          }
+        }
+      }
+    }, function(err, resp, body) {
+      if (err) {
+        console.eror('Failed to send message: ' + err);
+      }
+    });
+  }
+
+  function sendMessage2(text, recipientId) {
+    request.post('https://api.twitter.com/1.1/direct_messages/events/new.json',{
+      oauth: auth.twitter_oauth,
+      json:{
+        event: {
+          type: "message_create",
+          message_create: {
+            target: {
+              recipient_id: recipientId
+            },
+            message_data: {
+              text: text,
             }
           }
         }
